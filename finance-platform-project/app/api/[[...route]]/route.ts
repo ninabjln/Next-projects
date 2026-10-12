@@ -1,9 +1,10 @@
 import { clerkMiddleware, getAuth } from '@hono/clerk-auth'
-import authors from './authors'
 import * as z from 'zod'
 import { zValidator } from '@hono/zod-validator'
 import { Hono } from "hono";
 import { handle } from "@hono/vercel";
+
+//import authors from './authors'
 
 const app = new Hono().basePath("/api");
 app.use('*', clerkMiddleware())
@@ -41,7 +42,9 @@ app
       test: test,
     });
   });
-app.route('/authors', authors)
+
+//app.route('/authors', authors)
+
 export const GET = handle(app);
 
 export const POST = handle(app);

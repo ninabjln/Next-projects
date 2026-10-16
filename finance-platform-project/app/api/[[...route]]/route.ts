@@ -1,50 +1,26 @@
-import { clerkMiddleware, getAuth } from '@hono/clerk-auth'
-import * as z from 'zod'
-import { zValidator } from '@hono/zod-validator'
 import { Hono } from "hono";
 import { handle } from "@hono/vercel";
-
-//import authors from './authors'
-
+import accounts from "./accounts"
+import { HTTPException } from "hono/http-exception";
 const app = new Hono().basePath("/api");
-app.use('*', clerkMiddleware())
-app.get('/', (c) => {
-  const { userId } = getAuth(c);
 
-  if (!userId) {
-    return c.json({
-      message: 'You are not logged in.',
-    })
+app.route("/accounts", accounts)
+// export const runtime = "edge";
+
+app.onError((err, c) => {
+  if (err instanceof HTTPException) {
+    return err.getResponse();
   }
 
-  return c.json({
-    message: 'You are logged in!',
-    userId,
-  })
+  return c.json({error: "Internal error"}, 500);
+
 })
 
-app
-  .get("/hello", (c) => {
-    return c.json({
-      message: "Hello Next.js!",
-    });
-  })
-  .get(
-    "/hello/:test",
-    zValidator("param", z.object({test: z.string(),
-    }))
-    
-    , async (c) => {
-    const {test} = c.req.valid("param");
-
-    return c.json({
-      message: "Hello world",
-      test: test,
-    });
-  });
-
-//app.route('/authors', authors)
+const routes = app
+  .route("/accounts", accounts)
 
 export const GET = handle(app);
 
 export const POST = handle(app);
+
+export type AppType = typeof routes;

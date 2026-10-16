@@ -1,13 +1,10 @@
-import { auth } from "@clerk/nextjs/server";
-import { Suspense } from "react";
+"use client";
 
-export default function Dashboard() {
+export default function Home() {
+
   return (
-    <Suspense fallback={<p>Loading dashboard...</p>}>
-      <div className="w-full">
-        dashboard
-        {/* <UserButton /> */}
-      </div>
-    </Suspense>
+    <div className="w-full">
+      
+    </div>
   );
 }
